@@ -1,0 +1,1 @@
+"""Process payment vertical slice."""

@@ -1,0 +1,1 @@
+"""Create payment vertical slice."""

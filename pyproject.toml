@@ -1,0 +1,65 @@
+[project]
+name = "test-task-nebus"
+version = "0.1.0"
+description = "Async payments processing service"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
+    "dishka>=1.10.0",
+    "fastapi>=0.136.0",
+    "faststream[cli,rabbit]>=0.6.7",
+    "greenlet>=3.4.0",
+    "httpx>=0.28.1",
+    "pydantic>=2.13.3",
+    "sqlalchemy>=2.0.49",
+    "uvicorn>=0.45.0",
+]
+
+[dependency-groups]
+dev = [
+    "aiosqlite>=0.22.1",
+    "mypy>=1.20.1",
+    "poethepoet>=0.44.0",
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+    "ruff>=0.15.11",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+mypy_path = "src"
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+no_implicit_optional = true
+
+[[tool.mypy.overrides]]
+module = ["alembic.*"]
+ignore_missing_imports = true
+
+[tool.poe.tasks]
+compose = "docker compose up --build -d"
+compose_down = "docker compose down"
+test = "pytest -q"
+ruff = "ruff check ."
+mypy = "mypy src"
+
+[tool.poe.tasks.lint]
+sequence = ["ruff", "mypy"]
+
+[tool.uv]
+package = false
